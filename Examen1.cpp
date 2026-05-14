@@ -63,25 +63,21 @@ FinAlgoritmo
 #include <iostream>
 using namespace std;
 
+
 //
-    int max_estudiantes = 20; // maximo de estudiantes
-    float Nota_Aprobada = 14.0; // nota minima de aprobacion
+int max_estudiantes = 20; // maximo de estudiantes
+float Nota_Aprobada = 14.0; // nota minima de aprobacion
 
 // Ptototipos de funciones
 
 int mostrarMenu();
-
-int registrarEstudiantesYNotas(string nombres[], float notas[]);
-
-void mostrarListado(string nombres[], float notas[], int cantidad);
-
-void calcularMostrarPromedio(float notas[], int cantidad);
-
-void mostrarNotaMayorMenor(string nombres[], float notas[], int cantidad);
-
-void mostrarAprobadosReprobados(float notas[], int cantidad);
-
-void buscarEstudiante(string nombres[], float notas[], int cantidad);
+int registrarEstudiantes(string nombres[]);
+void registrarNotas(const string nombres[], float notas[], int cantidad);
+void mostrarListado(const string nombres[], const float notas[], int cantidad);
+void calcularMostrarPromedio(const float notas[], int cantidad);
+void mostrarNotaMayorMenor(const string nombres[], const float notas[], int cantidad);
+void mostrarAprobadosReprobados(const float notas[], int cantidad);
+void buscarEstudiante(const string nombres[], const float notas[], int cantidad);
 
 int main() {
     string listaNombres[max_estudiantes];
@@ -94,7 +90,10 @@ int main() {
 
         switch (opcion) {
             case 1:
-                cantidadActual = registrarEstudiantesYNotas(listaNombres, listaNotas);
+                // Primero registramos nombres y obtenemos la cantidad
+                cantidadActual = registrarEstudiantes(listaNombres);
+                // Luego registramos las notas para esos nombres
+                registrarNotas(listaNombres, listaNotas, cantidadActual);
                 break;
             case 2:
                 mostrarListado(listaNombres, listaNotas, cantidadActual);
@@ -112,7 +111,7 @@ int main() {
                 buscarEstudiante(listaNombres, listaNotas, cantidadActual);
                 break;
             case 7:
-                cout << "\nSaliendo del programa... ¡Exitos en tus estudios!\n";
+                cout << "\nSaliendo del programa\n";
                 break;
             default:
                 cout << "\n[!] Opcion invalida. Intente nuevamente.\n";
@@ -140,6 +139,67 @@ int mostrarMenu() {
     return op;
 }
  
+// Funciones
 
+// Función que registra los estudiantes 
+int registrarEstudiantes(string nombres[]) {
+    int cantidad = 0;
+
+    // 1. Validación de la cantidad de estudiantes (entre 1 y 20)
+    do {
+        cout << "Ingrese la cantidad de estudiantes a registrar (1 - " << max_estudiantes << "): ";
+        cin >> cantidad;
+
+        if (cantidad < 1 || cantidad > max_estudiantes) {
+            cout << "Error: La cantidad debe estar estrictamente entre 1 y " << max_estudiantes << endl;
+        }
+    } while (cantidad < 1 || cantidad > max_estudiantes);
+
+    cout << "--- Ingreso de Nombres ---" << endl;
+    
+    // Bucle para ingresar los nombres en el arreglo
+    for (int i = 0; i < cantidad; i++) {
+        string nombreEstudiante;
+
+        // Guardamos el nombre validado en el arreglo
+        nombres[i] = nombreEstudiante;
+    }
+
+    return cantidad; // Retornamos cuántos estudiantes se registraron
+}
+
+void registrarNotas(const string nombres[], float notas[], int cantidad) {
+    cout << "\n--- Registro de Calificaciones ---" << endl;
+    for (int i = 0; i < cantidad; i++) {
+        do {
+            cout << "Nota para " << nombres[i] << " (0-20): ";
+            cin >> notas[i];
+            if (notas[i] < 0 || notas[i] > 20)
+                cout << "Error: La nota debe estar entre 0 y 20.\n";
+        } while (notas[i] < 0 || notas[i] > 20);
+    }
+    cout << "Datos guardados correctamente." << endl;
+}
+
+void mostrarListado(const string nombres[], const float notas[], int cantidad) {
+    if (cantidad == 0) {
+        cout << " No hay estudiantes registrados." << endl;
+        return;
+    }
+    cout << "\n--- LISTADO COMPLETO ---" << endl;
+    for (int i = 0; i < cantidad; i++) {
+        cout << (i + 1) << ". " << nombres[i] << " - " << notas[i] << endl;
+    }
+}
+
+void calcularMostrarPromedio(float notas[], int cantidad) {
+    if (cantidad == 0) {
+        cout << "\n No hay datos para calcular promedio." << endl;
+        return;
+    }
+    float suma = 0;
+    for (int i = 0; i < cantidad; i++) suma += notas[i];
+    cout << "\nPromedio General del curso: " << (suma / cantidad) << endl;
+}
 
 
