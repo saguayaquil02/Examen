@@ -91,7 +91,7 @@ void buscarEstudiante(string nombres[], double notas[], int cantidadActual);
 int main(){
     // Declaramos los arreglos para ingresar los estudiantes y notas
     string estudiantes[max_estudiantes]; // cadena de texto
-    double notas[max_estudiantes];
+    double notasEstudiantes[max_estudiantes];
     
     // Variables de control
     int cantidadActual = 0; // Cuantos productos se han registrado realmente
@@ -105,33 +105,35 @@ int main(){
         switch (opcion) {
             case 1:
                 cout << "\n--- REGISTRO DE ESTUDIANTES ---" << endl;
-                // Llamamos a registrarEstudiantes
+                // Llamamos a la funcion registrarEstudiantes
+                registrarEstudiantesYNotas(estudiantes, notasEstudiantes, cantidadActual);
 
                 break;
             case 2:
                 cout << "\n--- LISTA DE ESTUDAINTES ---" << endl;
-                // Llamamos a mostrarListado
-
+                // Llamamos a la funcion mostrarListado
+                mostrarListado(estudiantes, notasEstudiantes, cantidadActual);
                 break;
             case 3:
                 cout << "\n--- PROMEDIO ---" << endl;
-                // Llamamos a calcularMostrarPromedio
-
+                // Llamamos a la funcion calcularMostrarPromedio
+                calcularMostrarPromedio(notasEstudiantes, cantidadActual);
                 break;
             case 4:
                 cout << "\n--- NOTA MAYOR Y MENOR ---" << endl;
                 // Llamamos a la funcion mostrarNotaMayorYMenor
+                mostrarNotaMayorYMenor(estudiantes, notasEstudiantes, cantidadActual);
                 break;
             case 5:
                 cout << "\n--- APROBADOS Y REPROBADOS ---" << endl;
                 // Llamamos a la funcion mostrarAprobadosyReprobados
-                cout << "\nGracias por usar el sistema Saliendo..." << endl;
+                mostrarAprobadosReprobados(estudiantes, notasEstudiantes, cantidadActual);
                 break;
 
             case 6:
                 cout << "\n--- BUSCAR ESTUDIANTE ---" << endl;
                 // Llamamos a la funcion buscarEstudiante
-                cout << "\nGracias por usar el sistema Saliendo..." << endl;
+                buscarEstudiante(estudiantes, notasEstudiantes, cantidadActual);
                 break;
             case 7:
                 cout << "\nGracias por usar el sistema Saliendo..." << endl;
@@ -285,6 +287,6 @@ void buscarEstudiante(string nombres[], double notas[], int cantidadActual){
     int id = validarOpcion(1, cantidadActual);
     int indice_ID = id - 1; // restamos menos uno para ubicar la posicion en el arreglo
     
-    cout << "Estudiante buscado ID: " << id << "'" << nombres[indice_ID] << "'";
+    cout << "Estudiante buscado ID: " << id << " '" << nombres[indice_ID] << "'";
 }
 
