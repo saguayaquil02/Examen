@@ -78,8 +78,8 @@ const int max_estudiantes = 20; // maximo de estudiantes
 const double Nota_Aprobada = 14.0; // nota minima de aprobacion
 
 // Ptototipos de funciones
-
 void mostrarMenu();
+int validarOpcion(int min, int max);
 void registrarEstudiantesYNotas(string nombres[], double notas[], int &cantidadActual);
 void mostrarListado(string nombres[], double notas[], int cantidadActual);
 void calcularMostrarPromedio(double notas[], int cantidadActual);
@@ -94,7 +94,7 @@ int main(){
     double notasEstudiantes[max_estudiantes];
     
     // Variables de control
-    int cantidadActual = 0; // Cuantos productos se han registrado realmente
+    int cantidadActual = 0; // variable para controlar cuantos estudiantes se han registrado
     int opcion;
     
     do {
@@ -110,7 +110,7 @@ int main(){
 
                 break;
             case 2:
-                cout << "\n--- LISTA DE ESTUDAINTES ---" << endl;
+                cout << "\n--- LISTA DE ESTUDIANTES ---" << endl;
                 // Llamamos a la funcion mostrarListado
                 mostrarListado(estudiantes, notasEstudiantes, cantidadActual);
                 break;
@@ -148,7 +148,7 @@ int main(){
 // Funciones
 void mostrarMenu() {
  
-    cout << "===== MENU ======" << endl;
+    cout << "\n============= MENU =============" << endl;
     cout << "1. Registrar estudiantes y notas" << endl;
     cout << "2. Mostrar listado completo" << endl;
     cout << "3. Mostrar promedio general" << endl;
@@ -178,16 +178,22 @@ void registrarEstudiantesYNotas(string nombres[], double notas[], int &cantidadA
     }
 
     // Ingresar el texto como una sola palabra
-    cout << "Ingrese el nombre (use guion bajo para espacios, ej: Sebastian_Alvear): ";
+    cout << "Ingrese el nombre (use guion bajo para espacios, ej: Mateo_Perez): ";
     cin >> nombres[cantidadActual];
 
     double nota;
     cout << "Ingrese la nota del estudiante: ";
     cin >> nota;
+    // bucle while para validar la nota ingresada
+    while (nota < 0 || nota > 20) {
+        cout << "Nota invalida. Ingrese una nota entre 0 y 20: ";
+        cin >> nota;
+    }
 
-    notas[cantidadActual] = validarOpcion(0, 20);
+    // Asignar el valor de nota en el arreglo
+    notas[cantidadActual] = nota;
 
-    cantidadActual++;
+    cantidadActual++; // aumentar la cantidad cada vez que se registra un estudiante
     cout << "Estudiante registrado exitosamente" << endl;
 }
 
@@ -196,12 +202,12 @@ void mostrarListado(string nombres[], double notas[], int cantidadActual) {
         cout << "El listado esta vacio. Registre estudiante primero." << endl;
         return;
     }
-
-    cout << "ID     NOMBRE          NOTA" << endl;
+    // Mostar el listado en forma de tabla
+    cout << "ID    NOMBRE          NOTA" << endl;
     cout << "---------------------------------------------" << endl;
     for (int i = 0; i < cantidadActual; i++) {
-        cout << i + 1 << "      " << nombres[i];
-        cout << "            " << notas[i];
+        // Se agregó el salto de línea al final (endl) para que no se imprima todo en una sola fila.
+        cout << i + 1 << "      " << nombres[i] << "            " << notas[i] << endl;
     }
     cout << "---------------------------------------------\n";
 }
@@ -211,10 +217,12 @@ void calcularMostrarPromedio(double notas[], int cantidadActual) {
         cout << "\n No hay datos para calcular promedio." << endl;
         return;
     }
-
+    // Ciclo para recorrer el arreglo secuencialmente
     float suma = 0;
     for (int i = 0; i < cantidadActual; i++) 
+        // Acumulador de sumas de las notas
         suma = suma + notas[i];
+        // Calculamos el promedio y mostramos el valor
     cout << "\nPromedio General del curso: " << (suma / cantidadActual) << endl;
 }
 
@@ -223,19 +231,19 @@ void mostrarNotaMayorYMenor(string nombres[], double notas[], int cantidadActual
         cout << "No hay datos registrados en el sistema." << endl;
         return;
     }
-
+    // variables para indicar la posicion inicial del arreglo y poder buscar la nota
     double mayorNota = notas[0];
     double menorNota = notas[0];
-    int indiceMayor = -1;
-    int indiceMenor = -1;
-
+    int indiceMayor = 0;
+    int indiceMenor = 0;
+    // ciclo para recorrer el arreglo y encontar la nota mayor y la posicion del estudiante en el arreglo
     for (int i = 0; i < cantidadActual; i++) {
         if (notas[i] > mayorNota) {
             mayorNota = notas[i];
             indiceMayor = i;
         }
     }
-
+    // ciclo para recorrel el arreglo y encontar la nota menor y la posicion del estudiante en el arreglo
     for (int k = 0; k < cantidadActual; k++)
     {
         if (notas[k] < menorNota)
@@ -244,11 +252,11 @@ void mostrarNotaMayorYMenor(string nombres[], double notas[], int cantidadActual
             indiceMenor = k;
         }
     }
-    
+    // Mostrar la nota mas alta con el nombre del estudiante y su nota 
     cout << "La nota mas alta es de: '" << nombres[indiceMayor] << "'" << endl;
     cout << "Nota: " << mayorNota << endl;
     cout << "La nota mas baja es de: '" << nombres[indiceMenor] << "'" << endl;
-    cout << "Nota: " << mayorNota << endl;
+    cout << "Nota: " << menorNota << endl;
 
 }
 
@@ -257,27 +265,65 @@ void mostrarAprobadosReprobados(string nombres[], double notas[], int cantidadAc
         cout << "No hay datos registrados en el sistema." << endl;
         return;
     }
-    
+    // Variables para asignar aprobados y reporbados e indices para los arreglos
     double aprobado, reprobado;
-    int indiceAprobado = -1;
-    int indiceReprobado = -1;
-    for (int i = 0; i < cantidadActual; i++)
-    {
-        if (notas[i] >= Nota_Aprobada)
-        {
-            aprobado = notas[i];
+    int indiceAprobado = 0;
+    int indiceReprobado = 0;
+    // ciclo para recorrer el arreglo y condicion para obtener la nota aprobada y posicion del estudiante en el arreglo
+    for (int i = 0; i < cantidadActual; i++) {
+        
+        if (notas[i] >= Nota_Aprobada) {
             indiceAprobado = i;
-            cout << "'" << nombres[indiceAprobado] << "'" << "Aprobado" << endl;            
-        }else if (notas[i] < Nota_Aprobada)
-        {
-            reprobado = notas[i];
+            cout << "'" << nombres[indiceAprobado] << "' - Aprobado" << endl;            
+        } else {
             indiceReprobado = i;
-            cout << "'" << nombres[indiceReprobado] << "'" << "Reprobado" << endl;  
+            cout << "'" << nombres[indiceReprobado] << "' - Reprobado" << endl;  
         }
     }
 }
 
-void buscarEstudiante(string nombres[], double notas[], int cantidadActual){
+void buscarEstudiante(string nombres[], double notas[], int cantidadActual) {
+    if (cantidadActual == 0) {
+        cout << "No hay datos registrados en el sistema." << endl;
+        return;
+    }
+
+    string nombreBuscado;
+    cout << "\nIngrese el nombre del estudiante a buscar: ";
+    cin >> nombreBuscado;
+
+    int indiceEncontrado = -1; // Usamos -1 como indicador de "no encontrado"
+
+    // Recorremos el arreglo comparando nombres
+    for (int i = 0; i < cantidadActual; i++) {
+        if (nombres[i] == nombreBuscado) {
+            indiceEncontrado = i; // Guardamos la posicion donde lo encontramos
+            break; // Salimos del ciclo porque ya lo encontramos
+        }
+    }
+
+    // Evaluamos el resultado
+    if (indiceEncontrado != -1) {
+        // Caso 4: Encontrado
+        cout << "\nEstudiante encontrado:" << endl;
+        cout << "Nombre: " << nombres[indiceEncontrado] << endl;
+        cout << "Nota: " << notas[indiceEncontrado] << endl;
+        
+        // Determinamos el estado basado en la nota
+        if (notas[indiceEncontrado] >= Nota_Aprobada) {
+            cout << "Estado: Aprobado" << endl;
+        } else {
+            cout << "Estado: Reprobado" << endl;
+        }
+    } else {
+        // Caso 5: Inexistente
+        cout << "\nError: El estudiante '" << nombreBuscado << "' no fue encontrado en el sistema." << endl;
+    }
+}
+
+/*
+    Funcion que busca estudiante por ID y no por nombre tambien funciona
+    void buscarEstudiante(string nombres[], double notas[], int cantidadActual){
     if (cantidadActual == 0) {
         cout << "No hay datos registrados en el sistema." << endl;
         return;
@@ -287,6 +333,6 @@ void buscarEstudiante(string nombres[], double notas[], int cantidadActual){
     int id = validarOpcion(1, cantidadActual);
     int indice_ID = id - 1; // restamos menos uno para ubicar la posicion en el arreglo
     
-    cout << "Estudiante buscado ID: " << id << " '" << nombres[indice_ID] << "'";
+    cout << "Estudiante buscado ID: " << id << " | Nombre: '" << nombres[indice_ID] << "' | Nota: " << notas[indice_ID] << endl;
 }
-
+*/
